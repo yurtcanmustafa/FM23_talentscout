@@ -5,7 +5,7 @@ from sklearn.preprocessing import RobustScaler
     ##########! DATA PREPROCESS !##########
 #TODO READ DATA, SCALING, KNNIMPUTER
 
-df=pd.read_excel(r"FM23_talentscout\dataset\FM_2023_v2.xlsx")
+df=pd.read_excel(r"dataset\FM_2023_v2.xlsx")
 df.head()
 def grab_col_names(dataframe, cat_th=10,  car_th=20):
     """
@@ -62,9 +62,13 @@ cat_cols, num_cols, cat_but_car = grab_col_names(df)
 num_cols= num_cols+["GK"]
 
 
-knn = KNNImputer()
+knn = KNNImputer(n_neighbors=5)
 scaler = RobustScaler()
 df[num_cols] = scaler.fit_transform(df[num_cols])
 df[num_cols] = pd.DataFrame(knn.fit_transform(df[num_cols]), columns=df[num_cols].columns)
 
 df[num_cols] = pd.DataFrame(scaler.inverse_transform(df[num_cols]), columns=df[num_cols].columns)
+
+df.to_excel("FM_2023_final.xlsx")
+
+#TODO Else
