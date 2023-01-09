@@ -70,7 +70,7 @@ kane = df.loc[df["Name"] == "Harry Kane" , player_columns]
 #? Radar Graph
 
 
-Technique = ['Crossing',  'Dribbling', 'First Touch', 'Corners', 'Free Kick Taking', 'Technique', 'Passing', 'Left Foot', 'Right Foot']
+Techn = ['Crossing',  'Dribbling', 'First Touch', 'Corners', 'Free Kick Taking', 'Technique', 'Passing', 'Left Foot', 'Right Foot']
 Attack = ['Finishing', 'Heading', 'Long Shots', 'Penalty Taking', 'Jumping Reach']
 Power = ['Strength', 'Natural Fitness']
 Speed = ['Acceleration', 'Agility', 'Balance', 'Pace', 'Stamina']
@@ -78,14 +78,39 @@ Defence = ['Marking', 'Tackling', 'Aggressiion', 'Long Throws', 'Foul']
 Mentality = ['Emotional control', 'Sportsmanship', 'Resistant to stress', 'Professional', 'Bravery', 'Anticipation', 'Composure', 'Concentration', 'Decision', 'Determination', 'Flair', 'Leadership', 'Work Rate', 'Teamwork', 'Stability', 'Ambition', 'Argue', 'Loyal', 'Adaptation', 'Vision', 'Off The Ball']
 GoalK = ['Reflexes', 'Kicking', 'Handling', 'One On Ones',  'Command Of Area', 'Communication', 'Eccentricity', 'Rushing Out', 'Punching', 'Throwing', 'Aerial Reach']
 
-df["Technique"] = df[Technique].apply(lambda x: x.mean(), axis=1)
+df["Techn"] = df[Techn].apply(lambda x: x.mean(), axis=1)
 df["Attack"] = df[Attack].apply(lambda x: x.mean(), axis=1)
 df["Power"] = df[Power].apply(lambda x: x.mean(), axis=1)
 df["Speed"] = df[Speed].apply(lambda x: x.mean(), axis=1)
 df["Mentality"] = df[Mentality].apply(lambda x: x.mean(), axis=1)
 df["GoalK"] = df[GoalK].apply(lambda x: x.mean(), axis=1)
 
-grouped_attributes = ["Technique","Attack","Power", "Speed", "Mentality" ,"GoalK"]
+grouped_attributes = ["Techn","Attack","Power", "Speed", "Mentality" ,"GoalK"]
 radar_plot = ["Name"] + grouped_attributes
-df_radar = df[radar_plot] 
+df_radar = df[radar_plot]
 df_radar.to_excel("radar_plot.xlsx")
+df.drop(grouped_attributes, inplace=True, axis=1)
+
+#! Bar Plot
+barplot_attributes =["Name"] + Techn + Attack + Power + Speed + Defence + Mentality
+len(barplot_attributes)
+barplot = df[barplot_attributes]
+barplot.to_excel("barplot.xlsx")
+df[Speed]
+
+#! Similarity
+position = ["DL", "DC", "DR", "WBL", "WBR", "DM", "ML", "MC", "MR", "AML", "AMC", "AMR", "ST", "GK"]
+similarity_cols =["Name"] + Techn + Attack + Power + Speed + Defence + Mentality + GoalK + position
+similarity_df = df[similarity_cols]
+
+df2 = similarity_df.copy()
+df2.set_index("Name", inplace=True)
+
+#* Euclidean Distance
+distances = pdist(df2, metric="euclidean")
+dist_matrix = squareform(distances)
+euclidean_distance = pd.DataFrame(dist_matrix, columns=df2.index, index=df2.index)
+euclidean_distance.to_excel("euclidean_distance.xlsx")
+euclidean_distance.iloc[0:5, 0:5]
+df2.iloc[0:2,:]
+
