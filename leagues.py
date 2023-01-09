@@ -71,4 +71,3 @@ df[num_cols] = pd.DataFrame(scaler.inverse_transform(df[num_cols]), columns=df[n
 
 df.to_excel("FM_2023_final.xlsx")
 
-#TODO Else
