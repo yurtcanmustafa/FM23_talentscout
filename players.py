@@ -74,28 +74,33 @@ pedri = df.loc[df["Name"] == "Pedri" , player_columns]
 kane = df.loc[df["Name"] == "Harry Kane" , player_columns]
 
 #? Radar Graph
+def radar_graph(dataframe, plot=False):
+    Techn = ['Crossing', 'Dribbling', 'First Touch', 'Corners', 'Free Kick Taking', 'Technique', 'Passing', 'Left Foot',
+             'Right Foot']
+    Attack = ['Finishing', 'Heading', 'Long Shots', 'Penalty Taking', 'Jumping Reach']
+    Power = ['Strength', 'Natural Fitness']
+    Speed = ['Acceleration', 'Agility', 'Balance', 'Pace', 'Stamina']
+    Defence = ['Marking', 'Tackling', 'Aggressiion', 'Long Throws', 'Foul']
+    Mentality = ['Emotional control', 'Sportsmanship', 'Resistant to stress', 'Professional', 'Bravery', 'Anticipation',
+                 'Composure', 'Concentration', 'Decision', 'Determination', 'Flair', 'Leadership', 'Work Rate',
+                 'Teamwork', 'Stability', 'Ambition', 'Argue', 'Loyal', 'Adaptation', 'Vision', 'Off The Ball']
+    GoalK = ['Reflexes', 'Kicking', 'Handling', 'One On Ones', 'Command Of Area', 'Communication', 'Eccentricity',
+             'Rushing Out', 'Punching', 'Throwing', 'Aerial Reach']
 
+    dataframe["Techn"] = dataframe[Techn].apply(lambda x: x.mean(), axis=1)
+    dataframe["Attack"] = dataframe[Attack].apply(lambda x: x.mean(), axis=1)
+    dataframe["Power"] = dataframe[Power].apply(lambda x: x.mean(), axis=1)
+    dataframe["Speed"] = dataframe[Speed].apply(lambda x: x.mean(), axis=1)
+    dataframe["Mentality"] = dataframe[Mentality].apply(lambda x: x.mean(), axis=1)
+    dataframe["GoalK"] = dataframe[GoalK].apply(lambda x: x.mean(), axis=1)
+    grouped_attributes = ["Techn", "Attack", "Power", "Speed", "Mentality", "GoalK"]
+    radar_plot = ["Name"] + grouped_attributes
+    df_radar = dataframe[radar_plot]
+    return df_radar
+    if plot:
+        df_radar.to_excel("radar_plot.xlsx")
 
-Techn = ['Crossing',  'Dribbling', 'First Touch', 'Corners', 'Free Kick Taking', 'Technique', 'Passing', 'Left Foot', 'Right Foot']
-Attack = ['Finishing', 'Heading', 'Long Shots', 'Penalty Taking', 'Jumping Reach']
-Power = ['Strength', 'Natural Fitness']
-Speed = ['Acceleration', 'Agility', 'Balance', 'Pace', 'Stamina']
-Defence = ['Marking', 'Tackling', 'Aggressiion', 'Long Throws', 'Foul']
-Mentality = ['Emotional control', 'Sportsmanship', 'Resistant to stress', 'Professional', 'Bravery', 'Anticipation', 'Composure', 'Concentration', 'Decision', 'Determination', 'Flair', 'Leadership', 'Work Rate', 'Teamwork', 'Stability', 'Ambition', 'Argue', 'Loyal', 'Adaptation', 'Vision', 'Off The Ball']
-GoalK = ['Reflexes', 'Kicking', 'Handling', 'One On Ones',  'Command Of Area', 'Communication', 'Eccentricity', 'Rushing Out', 'Punching', 'Throwing', 'Aerial Reach']
-
-df["Techn"] = df[Techn].apply(lambda x: x.mean(), axis=1)
-df["Attack"] = df[Attack].apply(lambda x: x.mean(), axis=1)
-df["Power"] = df[Power].apply(lambda x: x.mean(), axis=1)
-df["Speed"] = df[Speed].apply(lambda x: x.mean(), axis=1)
-df["Mentality"] = df[Mentality].apply(lambda x: x.mean(), axis=1)
-df["GoalK"] = df[GoalK].apply(lambda x: x.mean(), axis=1)
-
-grouped_attributes = ["Techn","Attack","Power", "Speed", "Mentality" ,"GoalK"]
-radar_plot = ["Name"] + grouped_attributes
-df_radar = df[radar_plot]
-df_radar.to_excel("radar_plot.xlsx")
-df.drop(grouped_attributes, inplace=True, axis=1)
+radar_graph(df)
 
 #! Bar Plot
 barplot_attributes =["Name"] + Techn + Attack + Power + Speed + Defence + Mentality
