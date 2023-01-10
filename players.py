@@ -123,17 +123,25 @@ barplot = barplot(df)
 
 
 #! Similarity
-position = ["DL", "DC", "DR", "WBL", "WBR", "DM", "ML", "MC", "MR", "AML", "AMC", "AMR", "ST", "GK"]
-similarity_cols =["Name"] + Techn + Attack + Power + Speed + Defence + Mentality + GoalK + position
-similarity_df = df[similarity_cols]
+def similarity_df(dataframe):
+    Techn = ['Crossing', 'Dribbling', 'First Touch', 'Corners', 'Free Kick Taking', 'Technique', 'Passing', 'Left Foot',
+             'Right Foot']
+    Attack = ['Finishing', 'Heading', 'Long Shots', 'Penalty Taking', 'Jumping Reach']
+    Power = ['Strength', 'Natural Fitness']
+    Speed = ['Acceleration', 'Agility', 'Balance', 'Pace', 'Stamina']
+    Defence = ['Marking', 'Tackling', 'Aggressiion', 'Long Throws', 'Foul']
+    Mentality = ['Emotional control', 'Sportsmanship', 'Resistant to stress', 'Professional', 'Bravery', 'Anticipation',
+                 'Composure', 'Concentration', 'Decision', 'Determination', 'Flair', 'Leadership', 'Work Rate',
+                 'Teamwork', 'Stability', 'Ambition', 'Argue', 'Loyal', 'Adaptation', 'Vision', 'Off The Ball']
+    GoalK = ['Reflexes', 'Kicking', 'Handling', 'One On Ones', 'Command Of Area', 'Communication', 'Eccentricity',
+             'Rushing Out', 'Punching', 'Throwing', 'Aerial Reach']
+    position = ["DL", "DC", "DR", "WBL", "WBR", "DM", "ML", "MC", "MR", "AML", "AMC", "AMR", "ST", "GK"]
+    similarity_cols = ["Name"] + Techn + Attack + Power + Speed + Defence + Mentality + GoalK + position
+    similarity = dataframe[similarity_cols]
+    similarity.set_index("Name", inplace=True)
+    return similarity
 
-df2 = similarity_df.copy()
-df2.set_index("Name", inplace=True)
-
-#STANDARD SCALER ??
-df2.head()
-#Gerek Var mı? Skorlar 1-20 arasında.
-
+df2 = similarity_df(df)
 
 # En benzeyen 5 kişi
 def most_similar(dataframe, number=5):
