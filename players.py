@@ -61,11 +61,15 @@ def grab_col_names(dataframe, cat_th=10,  car_th=20):
 
 cat_cols, num_cols, cat_but_car = grab_col_names(df)
 
+#? Oyuncu kıyaslama
 player_columns = ["Age", "Last_Player_Value", "Salary", "Nationality"]
 
-df.head()
+def player_compare(dataframe, player1, player2, columns):
+    compared_df = dataframe.loc[(dataframe["Name"] == player1) | (dataframe["Name"] == player2), columns]
+    return compared_df
 
-#? Oyuncu kıyaslama
+player_compare(dataframe=df, player1="Pedri", player2="Harry Kane", columns=player_columns)
+
 pedri = df.loc[df["Name"] == "Pedri" , player_columns]
 kane = df.loc[df["Name"] == "Harry Kane" , player_columns]
 
@@ -108,7 +112,10 @@ similarity_df = df[similarity_cols]
 df2 = similarity_df.copy()
 df2.set_index("Name", inplace=True)
 
-#STANDARD SCALER UYGULA!!!!!!!!!
+#STANDARD SCALER ??
+df2.head()
+#Gerek Var mı? Skorlar 1-20 arasında.
+
 
 # En benzeyen 5 kişi
 def most_similar(dataframe, number=5):
