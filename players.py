@@ -158,7 +158,6 @@ euclidean_distance = pd.DataFrame(dist_matrix, columns=df2.index, index=df2.inde
 euclidean_distance.to_excel("euclidean_distance.xlsx")
 euclidean_distance.iloc[0:5, 0:5]
 
-
 #* Canberra Distance
 canberra_distances = pdist(df2, metric="canberra")
 canberradist_matrix = squareform(canberra_distances)
@@ -199,3 +198,12 @@ dice_distance = pdist(df2, metric="dice")
 dice_matrix = squareform(dice_distance)
 dicedistance = pd.DataFrame(dice_matrix, columns=df2.index, index=df2.index)
 dicedistance.to_excel("dicedistance.xlsx")
+
+def create_distance(dataframe, metric, plot=False):
+    from scipy.spatial.distance import pdist, squareform
+    distance = pdist(dataframe, metric=metric)
+    matrix = squareform(distance)
+    distance_df = pd.DataFrame(matrix, columns=dataframe.index, index=dataframe.index)
+    return distance_df
+    if plot:
+        distance_df.to_excel(f"{metric}_distance.xlsx")
