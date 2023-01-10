@@ -100,14 +100,27 @@ def radar_graph(dataframe, plot=False):
     if plot:
         df_radar.to_excel("radar_plot.xlsx")
 
-radar_graph(df)
+radar = radar_graph(df)
 
 #! Bar Plot
-barplot_attributes =["Name"] + Techn + Attack + Power + Speed + Defence + Mentality
-len(barplot_attributes)
-barplot = df[barplot_attributes]
-barplot.to_excel("barplot.xlsx")
-df[Speed]
+def barplot(dataframe, plot=False):
+    Techn = ['Crossing', 'Dribbling', 'First Touch', 'Corners', 'Free Kick Taking', 'Technique', 'Passing', 'Left Foot',
+             'Right Foot']
+    Attack = ['Finishing', 'Heading', 'Long Shots', 'Penalty Taking', 'Jumping Reach']
+    Power = ['Strength', 'Natural Fitness']
+    Speed = ['Acceleration', 'Agility', 'Balance', 'Pace', 'Stamina']
+    Defence = ['Marking', 'Tackling', 'Aggressiion', 'Long Throws', 'Foul']
+    Mentality = ['Emotional control', 'Sportsmanship', 'Resistant to stress', 'Professional', 'Bravery', 'Anticipation',
+                 'Composure', 'Concentration', 'Decision', 'Determination', 'Flair', 'Leadership', 'Work Rate',
+                 'Teamwork', 'Stability', 'Ambition', 'Argue', 'Loyal', 'Adaptation', 'Vision', 'Off The Ball']
+    barplot_attributes = ["Name"] + Techn + Attack + Power + Speed + Defence + Mentality
+    barplot = dataframe[barplot_attributes]
+    return barplot
+    if plot:
+        barplot.to_excel("barplot.xlsx")
+
+barplot = barplot(df)
+
 
 #! Similarity
 position = ["DL", "DC", "DR", "WBL", "WBR", "DM", "ML", "MC", "MR", "AML", "AMC", "AMR", "ST", "GK"]
