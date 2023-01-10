@@ -1,4 +1,6 @@
 import pandas as pd
+import numpy as np
+from scipy.spatial.distance import squareform, pdist
 pd.set_option("display.max_columns", None)
 pd.set_option("display.width", 500)
 
@@ -106,11 +108,61 @@ similarity_df = df[similarity_cols]
 df2 = similarity_df.copy()
 df2.set_index("Name", inplace=True)
 
+#STANDARD SCALER UYGULA!!!!!!!!!
+
+# En benzeyen 5 kişi
+def most_similar(dataframe, number=5):
+    euc_list={}
+    for i in list(dataframe.columns):
+        euc_list.update({i:list(dataframe[i].sort_values(ascending=True)[1:number+1].index)})
+    ec=pd.DataFrame(euc_list)
+    return ec
+
 #* Euclidean Distance
 distances = pdist(df2, metric="euclidean")
 dist_matrix = squareform(distances)
 euclidean_distance = pd.DataFrame(dist_matrix, columns=df2.index, index=df2.index)
 euclidean_distance.to_excel("euclidean_distance.xlsx")
 euclidean_distance.iloc[0:5, 0:5]
-df2.iloc[0:2,:]
 
+
+#* Canberra Distance
+canberra_distances = pdist(df2, metric="canberra")
+canberradist_matrix = squareform(canberra_distances)
+canberradistance = pd.DataFrame(canberradist_matrix, columns=df2.index, index=df2.index)
+canberradistance.to_excel("canberradistance.xlsx")
+euclidean_distance.iloc[0:5, 0:5]
+
+
+#* Minkowski Distance
+minkowski_distance = pdist(df2, metric="minkowski")
+minkowski_matrix = squareform(minkowski_distance)
+minkowskidistance = pd.DataFrame(minkowski_matrix, columns=df2.index, index=df2.index)
+minkowskidistance.to_excel("minkowskidistance.xlsx")
+
+
+#* Correlation Distance
+correlation_distance = pdist(df2, metric="correlation")
+correlation_matrix = squareform(correlation_distance)
+correlationdistance = pd.DataFrame(correlation_matrix, columns=df2.index, index=df2.index)
+correlationdistance.to_excel("correlationdistance.xlsx")
+
+
+#* cityblock(manhattan) distance
+cityblock_distance = pdist(df2, metric="cityblock")
+cityblock_matrix = squareform(cityblock_distance)
+cityblockdistance = pd.DataFrame(cityblock_matrix, columns=df2.index, index=df2.index)
+cityblockdistance.to_excel("cityblockdistance.xlsx")
+
+
+#* jaccard distance
+jaccard_distance = pdist(df2, metric="jaccard")
+jaccard_matrix = squareform(jaccard_distance)
+jaccarddistance = pd.DataFrame(jaccard_matrix, columns=df2.index, index=df2.index)
+jaccarddistance.to_excel("jaccarddistance.xlsx")
+
+#* dice's distance
+dice_distance = pdist(df2, metric="dice")
+dice_matrix = squareform(dice_distance)
+dicedistance = pd.DataFrame(dice_matrix, columns=df2.index, index=df2.index)
+dicedistance.to_excel("dicedistance.xlsx")
