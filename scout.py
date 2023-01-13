@@ -2,11 +2,13 @@
 import pandas as pd
 import numpy as np
 import matplotlib
+matplotlib.use("TkAgg")
 from sklearn.cluster import KMeans
 from yellowbrick.cluster import KElbowVisualizer
 from sklearn.preprocessing import StandardScaler
-matplotlib.use("TkAgg")
 import seaborn as sns
+from sklearn.decomposition import PCA
+
 pd.set_option("display.width", 500)
 pd.set_option("display.max_columns", None)
 pd.set_option("display.float_format", lambda x: "%.2f" % x)
@@ -134,7 +136,8 @@ handle_outliers(df)
 
 # KMeans Model
 
-def create_kmeans(dataframe, numeric_columns):
+def create_kmeans(dataframe, numeric_columns, position):
+    dataframe = dataframe[dataframe["Position.1"] == position]
     dataframe = dataframe[numeric_columns]
     scaler = StandardScaler()
     dataframe = pd.DataFrame(scaler.fit_transform(dataframe), columns = dataframe.columns, index=dataframe.index)
@@ -146,5 +149,5 @@ def create_kmeans(dataframe, numeric_columns):
     dataframe["Clusters"] = dataframe["Clusters"]+1
     return dataframe
 
-da = create_kmeans(df, numeric_columns=num_cols)
+da = create_kmeans(df, numeric_columns=num_cols, position="Midfielder")
 
