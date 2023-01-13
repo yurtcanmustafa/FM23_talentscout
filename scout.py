@@ -154,17 +154,40 @@ def create_kmeans(dataframe, numeric_columns, position):
 da = create_kmeans(df, numeric_columns=num_cols, position="Midfielder")
 
 # PCA
-def create_PCA(dataframe, numeric_columns ,position):
+def create_PCA(dataframe, position):
+    Techn = ['Crossing', 'Dribbling', 'First Touch', 'Corners', 'Free Kick Taking', 'Technique', 'Passing', 'Left Foot',
+             'Right Foot']
+    Attack = ['Finishing', 'Heading', 'Long Shots', 'Penalty Taking', 'Jumping Reach']
+    Power = ['Strength', 'Natural Fitness']
+    Speed = ['Acceleration', 'Agility', 'Balance', 'Pace', 'Stamina']
+    Defence = ['Marking', 'Tackling', 'Aggressiion', 'Long Throws', 'Foul']
+    Mentality = ['Emotional control', 'Sportsmanship', 'Resistant to stress', 'Professional', 'Bravery', 'Anticipation',
+                 'Composure', 'Concentration', 'Decision', 'Determination', 'Flair', 'Leadership', 'Work Rate',
+                 'Teamwork', 'Stability', 'Ambition', 'Argue', 'Loyal', 'Adaptation', 'Vision', 'Off The Ball']
+    GoalK = ['Reflexes', 'Kicking', 'Handling', 'One On Ones', 'Command Of Area', 'Communication', 'Eccentricity',
+             'Rushing Out', 'Punching', 'Throwing', 'Aerial Reach']
+    if position == "Goalkeeper":
+        Attributess = Techn + Attack + Power + Speed + Defence + Mentality + GoalK
+    elif position == "Forward":
+        Attributess = Techn + Attack + Power + Speed + Mentality
+    elif position == "Defender":
+        Attributess = Techn + Power + Speed + Defence + Mentality
+    else:
+        Attributess = Techn + Attack + Power + Speed + Defence + Mentality
     dataframe = dataframe[dataframe["Position.1"]==position]
-    dataframe = dataframe[numeric_columns]
-    scaler = RobustScaler()
-    dataframe = pd.DataFrame(scaler.fit_transform(dataframe), columns=dataframe.columns, index=dataframe.index)
+    dataframe = dataframe[Attributess]
+    # scaler = RobustScaler()
+    # dataframe = pd.DataFrame(scaler.fit_transform(dataframe), columns=dataframe.columns, index=dataframe.index)
     pca = PCA(n_components=10)
     pca_fit = pca.fit_transform(dataframe)
     pca_fit = pd.DataFrame(pca_fit, index=dataframe.index)
     pca_fit["Score"] = pca_fit.apply(lambda x: x.mean(), axis=1)
     cols_to_drop = [col for col in pca_fit.columns if col not in ["Score"]]
     pca_fit.drop(cols_to_drop, axis=1, inplace=True)
+    pca_fit = pca_fit.sort_values(by="Score", ascending=False).head(10)
     return pca_fit
 
-create_PCA(df, numeric_columns=num_cols, position="Forward").sort_values(by="Score",ascending=False).head(10)
+create_PCA(df, position="Goalkeeper")
+create_PCA(df, position="Defender")
+create_PCA(df, position="Midfielder")
+create_PCA(df, position="Forward")
