@@ -5,8 +5,9 @@ import matplotlib
 matplotlib.use("TkAgg")
 from sklearn.cluster import KMeans
 from yellowbrick.cluster import KElbowVisualizer
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, RobustScaler
 import seaborn as sns
+import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 
 pd.set_option("display.width", 500)
@@ -105,6 +106,7 @@ def grab_col_names(dataframe, cat_th=10,  car_th=20):
 
     return cat_cols, num_cols, cat_but_car
 cat_cols, num_cols, cat_but_car = grab_col_names(df)
+num_cols = [col for col in num_cols if col not in ["Unnamed: 0", "UID"]]
 def outlier_thresholds(dataframe, col_name, q1=0.05, q3=0.95):
     quartile1 = dataframe[col_name].quantile(q1)
     quartile3 = dataframe[col_name].quantile(q3)
@@ -151,3 +153,18 @@ def create_kmeans(dataframe, numeric_columns, position):
 
 da = create_kmeans(df, numeric_columns=num_cols, position="Midfielder")
 
+# PCA
+def create_PCA(dataframe, numeric_columns ,position):
+    dataframe = dataframe[dataframe["Position.1"]==position]
+    dataframe = dataframe[numeric_columns]
+    scaler = RobustScaler()
+    dataframe = pd.DataFrame(scaler.fit_transform(dataframe), columns=dataframe.columns, index=dataframe.index)
+    pca = PCA(n_components=10)
+    pca_fit = pca.fit_transform(dataframe)
+    pca_fit = pd.DataFrame(pca_fit, index=dataframe.index)
+    pca_fit["Score"] = pca_fit.apply(lambda x: x.mean(), axis=1)
+    cols_to_drop = [col for col in pca_fit.columns if col not in ["Score"]]
+    pca_fit.drop(cols_to_drop, axis=1, inplace=True)
+    return pca_fit
+
+create_PCA(df, numeric_columns=num_cols, position="Forward").sort_values(by="Score",ascending=False).head(10)
