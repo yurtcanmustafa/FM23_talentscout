@@ -124,7 +124,6 @@ def replace_with_thresholds(dataframe, variable):
     low_limit, up_limit = outlier_thresholds(dataframe, variable)
     dataframe.loc[(dataframe[variable] < low_limit), variable] = low_limit
     dataframe.loc[(dataframe[variable] > up_limit), variable] = up_limit
-
 def handle_outliers(dataframe):
     outlier_cols = []
     for col in num_cols:
@@ -141,7 +140,7 @@ handle_outliers(df)
 def create_kmeans(dataframe, numeric_columns, position):
     dataframe = dataframe[dataframe["Position.1"] == position]
     dataframe = dataframe[numeric_columns]
-    scaler = StandardScaler()
+    scaler = RobustScaler()
     dataframe = pd.DataFrame(scaler.fit_transform(dataframe), columns = dataframe.columns, index=dataframe.index)
     kmeans = KMeans(random_state=1601).fit(dataframe)
     visualizer = KElbowVisualizer(kmeans, k=(1,15)).fit(dataframe)
@@ -152,7 +151,7 @@ def create_kmeans(dataframe, numeric_columns, position):
     return dataframe
 
 da = create_kmeans(df, numeric_columns=num_cols, position="Midfielder")
-
+da.groupby("Clusters").describe()
 # PCA
 def create_PCA(dataframe, position):
     Techn = ['Crossing', 'Dribbling', 'First Touch', 'Corners', 'Free Kick Taking', 'Technique', 'Passing', 'Left Foot',
@@ -167,7 +166,7 @@ def create_PCA(dataframe, position):
     GoalK = ['Reflexes', 'Kicking', 'Handling', 'One On Ones', 'Command Of Area', 'Communication', 'Eccentricity',
              'Rushing Out', 'Punching', 'Throwing', 'Aerial Reach']
     if position == "Goalkeeper":
-        Attributess = Techn + Attack + Power + Speed + Defence + Mentality + GoalK
+        Attributess = Techn + Attack + Defence + Power + Speed  + Mentality + GoalK
     elif position == "Forward":
         Attributess = Techn + Attack + Power + Speed + Mentality
     elif position == "Defender":
@@ -176,11 +175,10 @@ def create_PCA(dataframe, position):
         Attributess = Techn + Attack + Power + Speed + Defence + Mentality
     dataframe = dataframe[dataframe["Position.1"]==position]
     dataframe = dataframe[Attributess]
-    # scaler = RobustScaler()
-    # dataframe = pd.DataFrame(scaler.fit_transform(dataframe), columns=dataframe.columns, index=dataframe.index)
     pca = PCA(n_components=10)
-    pca_fit = pca.fit_transform(dataframe)
-    pca_fit = pd.DataFrame(pca_fit, index=dataframe.index)
+    pca_fit = pd.DataFrame(pca.fit_transform(dataframe), index=dataframe.index)
+    # KARA VERMEK GEREK!!!
+    pca_fit=pca_fit.applymap(lambda x: abs(x))
     pca_fit["Score"] = pca_fit.apply(lambda x: x.mean(), axis=1)
     cols_to_drop = [col for col in pca_fit.columns if col not in ["Score"]]
     pca_fit.drop(cols_to_drop, axis=1, inplace=True)
