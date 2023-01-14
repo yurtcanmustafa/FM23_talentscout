@@ -189,3 +189,17 @@ create_PCA(df, position="Goalkeeper")
 create_PCA(df, position="Defender")
 create_PCA(df, position="Midfielder")
 create_PCA(df, position="Forward")
+
+df.head()
+def create_correlation(dataframe, league, position, xvar, yvar):
+    dataframe = dataframe[(dataframe["Position.1"] == position) & (dataframe["Leagues"] == league)]
+    dataframe = dataframe[[xvar, yvar]]
+    pearson=dataframe.corr(method="pearson").iloc[0,1]
+    spearman=dataframe.corr(method="spearman").iloc[0,1]
+    kendall=dataframe.corr(method="kendall").iloc[0,1]
+    print("Pearson %.4f" % pearson)
+    print("Spearman %.4f" % spearman)
+    print("Kendall %.4f" % kendall)
+    return dataframe
+
+create_correlation(df, "Ligue 1", "Forward", "Stamina", "Strength")
