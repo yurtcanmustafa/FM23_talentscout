@@ -9,6 +9,7 @@ from sklearn.preprocessing import StandardScaler, RobustScaler
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
+from scipy.cluster.hierarchy import linkage, dendrogram
 
 pd.set_option("display.width", 500)
 pd.set_option("display.max_columns", None)
@@ -51,6 +52,31 @@ def createSwot(dataframe, playername):
         return swot
 
 pedri = createSwot(df, "Pedri")
+
+# Create Dendrogram
+def create_dendrogram(dataframe, playername):
+    Techn = ['Crossing', 'Dribbling', 'First Touch', 'Corners', 'Free Kick Taking', 'Technique', 'Passing', 'Left Foot',
+             'Right Foot']
+    Attack = ['Finishing', 'Heading', 'Long Shots', 'Penalty Taking', 'Jumping Reach']
+    Power = ['Strength', 'Natural Fitness']
+    Speed = ['Acceleration', 'Agility', 'Balance', 'Pace', 'Stamina']
+    Defence = ['Marking', 'Tackling', 'Aggressiion', 'Long Throws', 'Foul']
+    Mentality = ['Emotional control', 'Sportsmanship', 'Resistant to stress', 'Professional', 'Bravery', 'Anticipation',
+                 'Composure', 'Concentration', 'Decision', 'Determination', 'Flair', 'Leadership', 'Work Rate',
+                 'Teamwork', 'Stability', 'Ambition', 'Argue', 'Loyal', 'Adaptation', 'Vision', 'Off The Ball']
+    GoalK = ['Reflexes', 'Kicking', 'Handling', 'One On Ones', 'Command Of Area', 'Communication', 'Eccentricity',
+             'Rushing Out', 'Punching', 'Throwing', 'Aerial Reach']
+    Attributess = Techn + Attack + Defence + Power + Speed + Mentality + GoalK
+    dataframe = dataframe[dataframe.index == playername][Attributess].T
+    link=linkage(dataframe, "ward")
+    plt.figure(figsize=(16, 9))
+    dendrogram(link, leaf_font_size=10, orientation="right", labels=dataframe.index)
+    plt.ylabel(f"Attributes of {playername}")
+    plt.xlabel("Distances")
+    plt.title(f"Attribute Dendrogram of {playername}")
+    plt.show(block=True)
+
+create_dendrogram(df, "Cristiano Ronaldo")
 
 ### PCA ###
 
