@@ -1,6 +1,10 @@
+import matplotlib
+matplotlib.use("TkAgg")
+import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 from scipy.spatial.distance import squareform, pdist
+import seaborn as sns
 pd.set_option("display.max_columns", None)
 pd.set_option("display.width", 500)
 
@@ -115,12 +119,27 @@ def barplot(dataframe, plot=False):
                  'Teamwork', 'Stability', 'Ambition', 'Argue', 'Loyal', 'Adaptation', 'Vision', 'Off The Ball']
     barplot_attributes = ["Name"] + Techn + Attack + Power + Speed + Defence + Mentality
     barplot = dataframe[barplot_attributes]
+    barplot.set_index("Name", inplace=True)
     return barplot
     if plot:
         barplot.to_excel("barplot.xlsx")
 
 barplot = barplot(df)
 
+def barplot_graphic(dataframe, player1, player2):
+    barplott=barplot(dataframe)
+    plt.figure(figsize=(25, 8))
+    plt.subplot(1, 2, 1)
+    plt.title("Cristiano Ronaldo")
+    chart = sns.barplot(data=barplott[barplott.index == player1], palette="Set3")
+    chart.set_xticklabels(chart.get_xticklabels(), rotation=90)
+    plt.subplot(1, 2, 2)
+    plt.title("Erling Haaland")
+    chart2 = sns.barplot(data=barplott[barplott.index == player2], palette="Set3")
+    chart2.set_xticklabels(chart2.get_xticklabels(), rotation=90)
+    plt.show()
+
+barplot_graphic(df, "Cristiano Ronaldo", "Erling Haaland")
 
 #! Similarity
 def similarity_df(dataframe):
