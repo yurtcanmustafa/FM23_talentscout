@@ -143,14 +143,6 @@ def similarity_df(dataframe):
 
 df2 = similarity_df(df)
 
-# En benzeyen 5 kişi
-def most_similar(dataframe, number=5):
-    euc_list={}
-    for i in list(dataframe.columns):
-        euc_list.update({i:list(dataframe[i].sort_values(ascending=True)[1:number+1].index)})
-    ec=pd.DataFrame(euc_list)
-    return ec
-
 #* Euclidean Distance
 distances = pdist(df2, metric="euclidean")
 dist_matrix = squareform(distances)
@@ -207,3 +199,11 @@ def create_distance(dataframe, metric, plot=False):
     return distance_df
     if plot:
         distance_df.to_excel(f"{metric}_distance.xlsx")
+
+# En benzeyen 5 kişi
+def most_similar(dataframe, number=5):
+    euc_list={}
+    for i in list(dataframe.columns):
+        euc_list.update({i:list(dataframe[i].sort_values(ascending=True)[1:number+1].index)})
+    ec=pd.DataFrame(euc_list)
+    return ec
