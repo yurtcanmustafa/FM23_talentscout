@@ -130,11 +130,11 @@ def barplot_graphic(dataframe, player1, player2):
     barplott=barplot(dataframe)
     plt.figure(figsize=(25, 8))
     plt.subplot(1, 2, 1)
-    plt.title("Cristiano Ronaldo")
+    plt.title(f"{player1}")
     chart = sns.barplot(data=barplott[barplott.index == player1], palette="Set3")
     chart.set_xticklabels(chart.get_xticklabels(), rotation=90)
     plt.subplot(1, 2, 2)
-    plt.title("Erling Haaland")
+    plt.title(f"player2")
     chart2 = sns.barplot(data=barplott[barplott.index == player2], palette="Set3")
     chart2.set_xticklabels(chart2.get_xticklabels(), rotation=90)
     plt.show()
@@ -203,12 +203,6 @@ jaccard_distance = pdist(df2, metric="jaccard")
 jaccard_matrix = squareform(jaccard_distance)
 jaccarddistance = pd.DataFrame(jaccard_matrix, columns=df2.index, index=df2.index)
 jaccarddistance.to_excel("jaccarddistance.xlsx")
-
-#* dice's distance
-dice_distance = pdist(df2, metric="dice")
-dice_matrix = squareform(dice_distance)
-dicedistance = pd.DataFrame(dice_matrix, columns=df2.index, index=df2.index)
-dicedistance.to_excel("dicedistance.xlsx")
 
 def create_distance(dataframe, metric, plot=False):
     from scipy.spatial.distance import pdist, squareform
