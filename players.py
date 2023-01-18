@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 from scipy.spatial.distance import squareform, pdist
 import seaborn as sns
+from soccerplots.radar_chart import Radar
 pd.set_option("display.max_columns", None)
 pd.set_option("display.width", 500)
 
@@ -105,6 +106,43 @@ def radar_graph(dataframe, plot=False):
         df_radar.to_excel("radar_plot.xlsx")
 
 radar = radar_graph(df)
+def create_radarchart(dataframe, player1, player2):
+    dataframe.set_index("Name", inplace=True)
+    params = list(dataframe.columns)
+    dfradar = dataframe.reset_index()
+    ranges = []
+    a_values = []
+    b_values = []
+    for x in params:
+        a = min(dfradar[params][x])
+        a = a - (a * .25)
+
+        b = max(dfradar[params][x])
+        b = b + (b * .25)
+        ranges.append((a, b))
+    for x in range(len(dfradar["Name"])):
+        if dfradar["Name"][x] == player1:
+            a_values = dfradar.iloc[x].values.tolist()
+        if dfradar["Name"][x] == player2:
+            b_values = dfradar.iloc[x].values.tolist()
+
+    a_values = a_values[1:]
+    b_values = b_values[1:]
+    values = [a_values, b_values]
+    title = dict(
+        title_name=player1,
+        title_color="green",
+        title_name_2=player2,
+        title_color_2="yellow",
+        title_fontsize=18)
+    radar = Radar()
+    fig, ax = radar.plot_radar(ranges=ranges, params=params, values=values, radar_color=["green", "yellow"],
+                               alphas=[.5, .3], title=title, compare=True)
+    plt.show(block=True)
+    return fig
+
+
+create_radarchart(radar, "Cristiano Ronaldo", "Erling Haaland")
 
 #! Bar Plot
 def barplot(dataframe, plot=False):
