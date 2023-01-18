@@ -133,13 +133,13 @@ def create_radarchart(dataframe, player1, player2):
         title_name=player1,
         title_color="green",
         title_name_2=player2,
-        title_color_2="yellow",
+        title_color_2="red",
         title_fontsize=18)
     radar = Radar()
-    fig, ax = radar.plot_radar(ranges=ranges, params=params, values=values, radar_color=["green", "yellow"],
+    fig, ax = radar.plot_radar(ranges=ranges, params=params, values=values, radar_color=["green", "red"],
                                alphas=[.5, .3], title=title, compare=True)
     plt.show(block=True)
-    return fig
+    dataframe.reset_index(inplace=True)
 
 
 create_radarchart(radar, "Cristiano Ronaldo", "Erling Haaland")
