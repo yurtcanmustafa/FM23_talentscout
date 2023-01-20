@@ -71,3 +71,64 @@ df[num_cols] = pd.DataFrame(scaler.inverse_transform(df[num_cols]), columns=df[n
 
 df.to_excel("FM_2023_final.xlsx")
 
+
+
+
+def value_calculation(dataframe,position):
+    mevki_siralama=dataframe[dataframe["Position.1"]==position].sort_values("Last_Player_Value", ascending=False).head(10)
+    mevki_siralama=mevki_siralama[["Name","Last_Player_Value"]]
+    return mevki_siralama
+value_calculation(df, "Forward")
+
+midfielder_top10=value_calculation(df, "Midfielder")
+forward_top10=value_calculation(df, "Forward")
+defender_top10=value_calculation(df, "Defender")
+goalkeeper_top10=value_calculation(df, "Goalkeeper")
+
+
+League_total_value=(df.groupby("Leagues").agg({"Last_Player_Value":"sum"})).plot(kind="bar")
+(df.groupby("Leagues").agg({"Last_Player_Value":"sum"})).plot(kind="bar",  color="r")
+plt.show(block=True)
+sns.boxplot(data=df, palette="OrRd",y="Position.1", x="Last_Player_Value")
+def taktik_belirleme(dataframe,taktik):
+    if  taktik=="4-4-2":
+        taktik1=df[df["Position.1"]=="Forward"].sort_values("Last_Player_Value", ascending=False)[["Name","Position.1","Club"]].head(2)
+        taktik2=df[df["Position.1"]=="Defender"].sort_values("Last_Player_Value", ascending=False)[["Name","Position.1","Club"]].head(4)
+        taktik3=df[df["Position.1"]=="Midfielder"].sort_values("Last_Player_Value", ascending=False)[["Name","Position.1","Club"]].head(4)
+        taktik4=df[df["Position.1"] == "Goalkeeper"].sort_values("Last_Player_Value", ascending=False)[["Name","Position.1","Club"]].head(1)
+        taktiks = pd.concat([taktik4,taktik2,taktik3,taktik1])
+        return taktiks
+    elif  taktik=="3-5-2":
+        taktik1=df[df["Position.1"]=="Forward"].sort_values("Last_Player_Value", ascending=False)[["Name","Position.1","Club"]].head(2)
+        taktik2=df[df["Position.1"]=="Defender"].sort_values("Last_Player_Value", ascending=False)[["Name","Position.1","Club"]].head(3)
+        taktik3=df[df["Position.1"]=="Midfielder"].sort_values("Last_Player_Value", ascending=False)[["Name","Position.1","Club"]].head(5)
+        taktik4=df[df["Position.1"] == "Goalkeeper"].sort_values("Last_Player_Value", ascending=False)[["Name","Position.1","Club"]].head(1)
+        taktiks = pd.concat([taktik4, taktik2, taktik3, taktik1])
+        return taktiks
+    elif taktik=="4-3-3":
+       taktik1=df[df["Position.1"] == "Forward"].sort_values("Last_Player_Value", ascending=False)[["Name","Position.1","Club"]].head(3)
+       taktik2=df[df["Position.1"] == "Defender"].sort_values("Last_Player_Value", ascending=False)[["Name","Position.1","Club"]].head(4)
+       taktik3=df[df["Position.1"] == "Midfielder"].sort_values("Last_Player_Value", ascending=False)[["Name","Position.1","Club"]].head(3)
+       taktik4=df[df["Position.1"] == "Goalkeeper"].sort_values("Last_Player_Value", ascending=False)[["Name","Position.1","Club"]].head(1)
+       taktiks = pd.concat([taktik4, taktik2, taktik3, taktik1])
+       return taktiks
+    else:
+       taktik1=df[df["Position.1"] == "Forward"].sort_values("Last_Player_Value", ascending=False)[["Name","Position.1","Club"]].head(1)
+       taktik2=df[df["Position.1"] == "Defender"].sort_values("Last_Player_Value", ascending=False)[["Name","Position.1","Club"]].head(4)
+       taktik3=df[df["Position.1"] == "Midfielder"].sort_values("Last_Player_Value", ascending=False)[["Name","Position.1","Club"]].head(5)
+       taktik4=df[df["Position.1"] == "Goalkeeper"].sort_values("Last_Player_Value", ascending=False)[["Name","Position.1","Club"]].head(1)
+       taktiks = pd.concat([taktik4, taktik2, taktik3, taktik1])
+       return taktiks
+
+taktik_belirleme(df,"4-3-3")
+
+
+
+taktik_belirleme=pd.DataFrame(taktik_belirleme(df, "3-5-2"))
+taktik_belirleme2=taktik_belirleme(df, "4-3-3")
+taktik_belirleme3=taktik_belirleme(df,"4-4-2")
+taktik_belirleme1=taktik_belirleme(df,"3-5-2")
+
+
+taktik_belirleme.to_excel("taktik_belirleme_ucbesiki.xlsx")
+
